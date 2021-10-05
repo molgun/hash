@@ -21,7 +21,7 @@
 -compile({no_auto_import,[ceil/1]}).
 
 pbkdf2(PRF, Pass, Salt, C, DkLen) ->
-   Init = crypto:hmac(PRF, Pass, Salt),
+   Init = crypto:mac(hmac, PRF, Pass, Salt),
    N    = ceil(DkLen / (byte_size(Init) * 8)),
    binary:part(    
       erlang:iolist_to_binary(
@@ -32,13 +32,13 @@ pbkdf2(PRF, Pass, Salt, C, DkLen) ->
    ).
 
 fpbkdf2(C, PRF, Pass, Data) ->
-   Init = crypto:hmac(PRF, Pass, Data),
+   Init = crypto:mac(hmac, PRF, Pass, Data),
    fpbkdf2(C - 1, PRF, Pass, Init, Init).   
 
 fpbkdf2(0, _PRF, _Pass, _Data, Acc) ->
    Acc;
 fpbkdf2(C,  PRF,  Pass,  Data, Acc) ->
-   Next = crypto:hmac(PRF, Pass, Data),
+   Next = crypto:mac(hmac, PRF, Pass, Data),
    fpbkdf2(C - 1, PRF, Pass, Next, crypto:exor(Acc, Next)).
 
 ceil(X) ->

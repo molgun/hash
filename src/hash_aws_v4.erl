@@ -192,7 +192,7 @@ get_signature_key(Key, Date, Region, Service) ->
 %%
 %%
 sign(Key, Data) ->
-   crypto:hmac(sha256, Key, Data).
+   crypto:mac(hmac, sha256, Key, Data).
    
 
 btoh(X) ->
